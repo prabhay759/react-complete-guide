@@ -30,14 +30,17 @@ class app extends Component {
   state = {
     persons: [
       {
+        id: 1,
         name: "Max",
         age: 28,
       },
       {
+        id: 2,
         name: "Menu",
         age: 29,
       },
       {
+        id: 3,
         name: "Stephanie",
         age: 28,
       },
@@ -66,28 +69,23 @@ class app extends Component {
   // };
 
   deletePersonHandler = (index) => {
-    const persons = this.state.persons;
+    const persons = [...this.state.persons];
     persons.splice(index, 1);
-    this.setState({ persons });
+    this.setState({ persons: persons });
   };
 
-  nameChangedHandler = (event) => {
-    this.setState = {
-      persons: [
-        {
-          name: "Maxmillian",
-          age: 28,
-        },
-        {
-          name: event.target.value,
-          age: 29,
-        },
-        {
-          name: "Stephanie",
-          age: 27,
-        },
-      ],
-    };
+  nameChangedHandler = (event, personId) => {
+    const personIndex = this.state.persons.findIndex((p) => {
+      return p.id === personId;
+    });
+
+    const person = { ...this.state.persons[personIndex] };
+    person.name = event.target.value;
+    const persons = [...this.state.persons];
+    persons[personIndex] = person;
+    this.setState({
+      persons: persons,
+    });
   };
 
   togglePersonHandler = () => {
@@ -115,9 +113,11 @@ class app extends Component {
           {this.state.persons.map((person, index) => {
             return (
               <Person
+                key={person.id} // This is needed to set the unique key for each component being rendered.
                 name={person.name}
                 age={person.age}
                 click={this.deletePersonHandler.bind(this, index)}
+                changed={(event) => this.nameChangedHandler(event, person.id)}
               ></Person>
             );
           })}
