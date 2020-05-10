@@ -1,6 +1,7 @@
 import React, { useState, Component } from "react";
+import styled from "styled-components";
 import "./App.css";
-import Radium, { StyleRoot } from "radium";
+import Radium, { StyleRoot } from "radium"; // Used to add support for Sudo selector and media queries.
 import Person, { person1 as Person1 } from "./Person/Person";
 
 // Assignment purpose
@@ -26,6 +27,20 @@ import Person, { person1 as Person1 } from "./Person/Person";
 //   ],
 //   otherState: "Some other value",
 // });
+
+const StyledButton = styled.button`
+  background-color: ${(props) => (props.alt ? "red" : "green")};
+  color: white;
+  font: inherit;
+  border: 1px solid blue;
+  padding: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${(props) => (props.alt ? "salmon" : "lightgreen")};
+    color: "black";
+  }
+`;
 
 class app extends Component {
   state = {
@@ -147,19 +162,20 @@ class app extends Component {
     }
 
     return (
-      <StyleRoot>
-        <div className="App">
-          <p>Hi, I am a React application</p>
-          <p className={classes.join(" ")}>This is really working!</p>
-          <button onClick={this.togglePersonHandler} style={style}>
-            Toggle Persons
-          </button>
-          {persons}
-        </div>
-      </StyleRoot>
+      <div className="App">
+        <p>Hi, I am a React application</p>
+        <p className={classes.join(" ")}>This is really working!</p>
+        <StyledButton
+          onClick={this.togglePersonHandler}
+          alt={this.state.showPersons}
+        >
+          Toggle Persons
+        </StyledButton>
+        {persons}
+      </div>
     );
   }
 }
 
 // High order function
-export default Radium(app);
+export default app;
