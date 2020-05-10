@@ -1,5 +1,5 @@
 import React from "react";
-// import "./person.css";
+import classes from "./person.css";
 import styled from "styled-components";
 
 const StyledDiv = styled.div`
@@ -22,15 +22,13 @@ const person = (props) => {
   };
 
   return (
-    <StyledDiv>
-      <div className="Person" style={style}>
+      <div className={classes.Person} style={style}>
         <p onClick={props.click}>
           I am {props.name} and I am {props.age} year old
         </p>
         <p>{props.children}</p>
         <input type="text" onChange={props.changed} value={props.name} />
       </div>
-    </StyledDiv>
   );
 };
 

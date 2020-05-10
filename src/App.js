@@ -1,6 +1,6 @@
 import React, { useState, Component } from "react";
 import styled from "styled-components";
-import "./App.css";
+import classes from "./App.css";
 import Radium, { StyleRoot } from "radium"; // Used to add support for Sudo selector and media queries.
 import Person, { person1 as Person1 } from "./Person/Person";
 
@@ -29,17 +29,7 @@ import Person, { person1 as Person1 } from "./Person/Person";
 // });
 
 const StyledButton = styled.button`
-  background-color: ${(props) => (props.alt ? "red" : "green")};
-  color: white;
-  font: inherit;
-  border: 1px solid blue;
-  padding: 8px;
-  cursor: pointer;
 
-  &:hover {
-    background-color: ${(props) => (props.alt ? "salmon" : "lightgreen")};
-    color: "black";
-  }
 `;
 
 class app extends Component {
@@ -110,22 +100,23 @@ class app extends Component {
   };
 
   render() {
-    // Inline style.
-    // styling the button
-    // styling can be applied globally.
-    const style = {
-      backgroundColor: "green",
-      font: "inherit",
-      border: "1px solid blue",
-      padding: "8px",
-      cursor: "pointer",
-      // Sudo selector, only works because of higher order component.
-      ":hover": {
-        backgroundColor: "lightgreen",
-        color: "black",
-      },
-    };
+    // // Inline style.
+    // // styling the button
+    // // styling can be applied globally.
+    // const style = {
+    //   backgroundColor: "green",
+    //   font: "inherit",
+    //   border: "1px solid blue",
+    //   padding: "8px",
+    //   cursor: "pointer",
+    //   // Sudo selector, only works because of higher order component.
+    //   ":hover": {
+    //     backgroundColor: "lightgreen",
+    //     color: "black",
+    //   },
+    // };
 
+    let btnClass =  [classes.Button];
     let persons = null;
 
     if (this.state.showPersons) {
@@ -145,32 +136,32 @@ class app extends Component {
         </div>
       );
 
-      style.backgroundColor = "red";
-      style[":hover"] = {
-        backgroundColor: "salmon",
-        color: "black",
-      };
+      // style.backgroundColor = "red";
+      // style[":hover"] = {
+      //   backgroundColor: "salmon",
+      //   color: "black",
+      // };
+      btnClass.push(classes.Red)
     }
 
-    const classes = [];
+    const assignedClasses = [];
     if (this.state.persons.length <= 2) {
-      classes.push("red");
+      assignedClasses.push(classes.red);
     }
 
     if (this.state.persons.length <= 1) {
-      classes.push("bold");
+      assignedClasses.push(classes.bold);
     }
 
     return (
-      <div className="App">
+      <div className={classes.App}>
         <p>Hi, I am a React application</p>
-        <p className={classes.join(" ")}>This is really working!</p>
-        <StyledButton
+        <p className={assignedClasses.join(" ")}>This is really working!</p>
+        <button className={btnClass.join(' ')}
           onClick={this.togglePersonHandler}
-          alt={this.state.showPersons}
         >
           Toggle Persons
-        </StyledButton>
+        </button>
         {persons}
       </div>
     );
