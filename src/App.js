@@ -3,6 +3,7 @@ import styled from "styled-components";
 import classes from "./App.css";
 import Radium, { StyleRoot } from "radium"; // Used to add support for Sudo selector and media queries.
 import Person, { person1 as Person1 } from "./Person/Person";
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary'
 
 // Assignment purpose
 // import UserInput from './UserInput/UserInput'
@@ -124,13 +125,15 @@ class app extends Component {
         <div>
           {this.state.persons.map((person, index) => {
             return (
-              <Person
-                key={person.id} // This is needed to set the unique key for each component being rendered.
-                name={person.name}
-                age={person.age}
-                click={this.deletePersonHandler.bind(this, index)}
-                changed={(event) => this.nameChangedHandler(event, person.id)}
-              ></Person>
+              <ErrorBoundary key={person.id}>
+                <Person
+                  key={person.id} // This is needed to set the unique key for each component being rendered.
+                  name={person.name}
+                  age={person.age}
+                  click={this.deletePersonHandler.bind(this, index)}
+                  changed={(event) => this.nameChangedHandler(event, person.id)}
+                ></Person>
+              </ErrorBoundary>
             );
           })}
         </div>
