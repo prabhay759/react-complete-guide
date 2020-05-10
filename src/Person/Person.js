@@ -1,16 +1,24 @@
-import React from 'react'
-import './person.css'
+import React from "react";
+import "./person.css";
+import Radium from "radium";
 
 const person = (props) => {
-  return (
-    <div className='Person'>
-      <p onClick={props.click}>I am {props.name} and I am {props.age} year old</p>
-      <p>{props.children}</p>
-      <input type='text' onChange={props.changed} value={props.name}/>
-    </div>
-  )
-}
+  const style = {
+    "@media (min-width: 500px)": {
+      width: "450px",
+    },
+  };
 
+  return (
+    <div className="Person" style={style}>
+      <p onClick={props.click}>
+        I am {props.name} and I am {props.age} year old
+      </p>
+      <p>{props.children}</p>
+      <input type="text" onChange={props.changed} value={props.name} />
+    </div>
+  );
+};
 
 // const person1 = (props) => {
 //   return (
@@ -28,6 +36,6 @@ const person = (props) => {
 //   }
 // }
 
-export default person;
+// Styled components is another library we could use.
+export default Radium(person);
 // export {person1};
-

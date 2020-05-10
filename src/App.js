@@ -1,5 +1,6 @@
 import React, { useState, Component } from "react";
 import "./App.css";
+import Radium, { StyleRoot } from "radium";
 import Person, { person1 as Person1 } from "./Person/Person";
 
 // Assignment purpose
@@ -103,6 +104,11 @@ class app extends Component {
       border: "1px solid blue",
       padding: "8px",
       cursor: "pointer",
+      // Sudo selector, only works because of higher order component.
+      ":hover": {
+        backgroundColor: "lightgreen",
+        color: "black",
+      },
     };
 
     let persons = null;
@@ -123,18 +129,37 @@ class app extends Component {
           })}
         </div>
       );
+
+      style.backgroundColor = "red";
+      style[":hover"] = {
+        backgroundColor: "salmon",
+        color: "black",
+      };
+    }
+
+    const classes = [];
+    if (this.state.persons.length <= 2) {
+      classes.push("red");
+    }
+
+    if (this.state.persons.length <= 1) {
+      classes.push("bold");
     }
 
     return (
-      <div className="App">
-        <p>This is really working!</p>
-        <button onClick={this.togglePersonHandler} style={style}>
-          Toggle Person
-        </button>
-        {persons}
-      </div>
+      <StyleRoot>
+        <div className="App">
+          <p>Hi, I am a React application</p>
+          <p className={classes.join(" ")}>This is really working!</p>
+          <button onClick={this.togglePersonHandler} style={style}>
+            Toggle Persons
+          </button>
+          {persons}
+        </div>
+      </StyleRoot>
     );
   }
 }
 
-export default app;
+// High order function
+export default Radium(app);
