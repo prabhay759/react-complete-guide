@@ -1,5 +1,6 @@
 import React from "react";
 import classes from "./person.css";
+import Aux from '../../../hoc/Aux';
 // import styled from "styled-components";
 
 // const StyledDiv = styled.div`
@@ -25,13 +26,16 @@ class Person extends React.Component {
     // Returning array of components
     // We can use high order component to wrap the componet when we have multiple component to return
     return [
-      // <div className={classes.Person} style={this.style} >
-      <p key='one' onClick={this.props.click}>
-        I am {this.props.name} and I am {this.props.age} year old
-        </p>,
-      <p key='two'>{this.props.children}</p>,
-      <input key='three' type="text" onChange={this.props.changed} value={this.props.name} />,
-      // </div>
+      <Aux>
+        {/* // <div className={classes.Person} style={this.style} > */}
+        <p key='one' onClick={this.props.click}>
+          I am {this.props.name} and I am {this.props.age} year old
+        </p>
+        <p key='two'>{this.props.children}</p>
+        <input key='three' type="text" onChange={this.props.changed} value={this.props.name} />
+        {/* // </div> */}
+      </Aux>
+
     ];
   }
 };
