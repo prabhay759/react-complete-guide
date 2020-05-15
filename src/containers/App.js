@@ -1,9 +1,14 @@
-import React, { useState, Component } from "react";
-import styled from "styled-components";
+import React, { Component } from "react";
+// import styled from "styled-components";
 import classes from "./App.css";
-import Radium, { StyleRoot } from "radium"; // Used to add support for Sudo selector and media queries.
-import Person, { person1 as Person1 } from "./Person/Person";
-import ErrorBoundary from './ErrorBoundary/ErrorBoundary'
+// import Radium, { StyleRoot } from "radium"; // Used to add support for Sudo selector and media queries.
+// import Person, { person1 as Person1 } from "../components/Persons/Person/Person";
+// import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
+// import IdleTimeOut from '../components/IdleTimeOut/IdleTimeout';
+// import Timeout from '../components/Timeout/Timeout';
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
+
 
 // Assignment purpose
 // import UserInput from './UserInput/UserInput'
@@ -27,13 +32,13 @@ import ErrorBoundary from './ErrorBoundary/ErrorBoundary'
 //     },
 //   ],
 //   otherState: "Some other value",
-// });
-
-const StyledButton = styled.button`
-
-`;
-
+// })
 class app extends Component {
+  constructor(props) {
+    super(props);
+    console.log('App.JS Constructor');
+  }
+
   state = {
     persons: [
       {
@@ -54,26 +59,13 @@ class app extends Component {
     ],
     otherState: "Some other value",
     showPersons: false,
+    showCockpit: true,
   };
 
-  // switchNamehandler = (newName) => {
-  //   this.setState({
-  //     persons: [
-  //       {
-  //         name: newName,
-  //         age: 28,
-  //       },
-  //       {
-  //         name: "Menu",
-  //         age: 29,
-  //       },
-  //       {
-  //         name: "Stephanie",
-  //         age: 27,
-  //       },
-  //     ],
-  //   });
-  // };
+  static getDerivedStateFromProps(props, state) {
+    console.log("APP.js getDerivedStateFromProps", props, state);
+    return true;
+  }
 
   deletePersonHandler = (index) => {
     const persons = [...this.state.persons];
@@ -100,6 +92,20 @@ class app extends Component {
     this.setState({ showPersons: !doesShow });
   };
 
+  componentDidMount() {
+    console.log("APP:js componentDidMount");
+  }
+
+  componentDidUpdate() {
+    console.log("App.JS componentDidUpdate");
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('APP.JS Should component did update happens');
+
+    return true;
+  }
+
   render() {
     // // Inline style.
     // // styling the button
@@ -117,25 +123,18 @@ class app extends Component {
     //   },
     // };
 
-    let btnClass =  [classes.Button];
+    console.log("App.js Render");
+
     let persons = null;
 
     if (this.state.showPersons) {
       persons = (
         <div>
-          {this.state.persons.map((person, index) => {
-            return (
-              <ErrorBoundary key={person.id}>
-                <Person
-                  key={person.id} // This is needed to set the unique key for each component being rendered.
-                  name={person.name}
-                  age={person.age}
-                  click={this.deletePersonHandler.bind(this, index)}
-                  changed={(event) => this.nameChangedHandler(event, person.id)}
-                ></Person>
-              </ErrorBoundary>
-            );
-          })}
+          <Persons
+            persons={this.state.persons}
+            clicked={this.deletePersonHandler}
+            changed={this.nameChangedHandler}
+          ></Persons>
         </div>
       );
 
@@ -144,28 +143,31 @@ class app extends Component {
       //   backgroundColor: "salmon",
       //   color: "black",
       // };
-      btnClass.push(classes.Red)
     }
 
-    const assignedClasses = [];
-    if (this.state.persons.length <= 2) {
-      assignedClasses.push(classes.red);
-    }
 
-    if (this.state.persons.length <= 1) {
-      assignedClasses.push(classes.bold);
-    }
+    // Added default logg out functionality using react-idle-timeout.
+    // For modal used react-boostrap/modal
 
     return (
-      <div className={classes.App}>
-        <p>Hi, I am a React application</p>
-        <p className={assignedClasses.join(" ")}>This is really working!</p>
-        <button className={btnClass.join(' ')}
-          onClick={this.togglePersonHandler}
-        >
-          Toggle Persons
-        </button>
-        {persons}
+      <div>
+        {/* <IdleTimeOut {...this.props}></IdleTimeOut> */}
+        {/* <Timeout /> */}
+        <div className={classes.App}>
+          <button onClick={() => {
+            this.setState(
+              { showCockpit: false }
+            );
+          }}>Remove Cockpit</button>
+          {this.state.showCockpit ?
+            <Cockpit
+              showPersons={this.state.showPersons}
+              personsLength={this.state.persons.length}
+              clicked={this.togglePersonHandler}
+              title={this.appTitle} /> : null
+          }
+          {persons}
+        </div>
       </div>
     );
   }
