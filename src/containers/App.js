@@ -8,8 +8,9 @@ import classes from "./App.css";
 // import Timeout from '../components/Timeout/Timeout';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
-
-
+import withClass from '../hoc/withClass';
+import Aux from '../hoc/Aux';
+import AuthContext from '../context/authContext';
 // Assignment purpose
 // import UserInput from './UserInput/UserInput'
 // import UserOutput from './UserOutput/UserOutput'
@@ -33,7 +34,7 @@ import Cockpit from '../components/Cockpit/Cockpit';
 //   ],
 //   otherState: "Some other value",
 // })
-class app extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
     console.log('App.JS Constructor');
@@ -60,6 +61,8 @@ class app extends Component {
     otherState: "Some other value",
     showPersons: false,
     showCockpit: true,
+    changeCounter: 0,
+    authenticated: false,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -70,7 +73,7 @@ class app extends Component {
   deletePersonHandler = (index) => {
     const persons = [...this.state.persons];
     persons.splice(index, 1);
-    this.setState({ persons: persons });
+    this.setState({ persons: persons, changeCounter: this.state.changeCounter + 1 });
   };
 
   nameChangedHandler = (event, personId) => {
@@ -82,8 +85,8 @@ class app extends Component {
     person.name = event.target.value;
     const persons = [...this.state.persons];
     persons[personIndex] = person;
-    this.setState({
-      persons: persons,
+    this.setState((prevState, props) => {
+      return { persons: persons, changeCounter: prevState.changeCounter + 1 };
     });
   };
 
@@ -105,6 +108,10 @@ class app extends Component {
 
     return true;
   }
+
+  loginHandler = () => {
+    this.setState({ authenticated: true });
+  };
 
   render() {
     // // Inline style.
@@ -134,6 +141,7 @@ class app extends Component {
             persons={this.state.persons}
             clicked={this.deletePersonHandler}
             changed={this.nameChangedHandler}
+            isAuthenticated={this.state.authenticated}
           ></Persons>
         </div>
       );
@@ -153,25 +161,29 @@ class app extends Component {
       <div>
         {/* <IdleTimeOut {...this.props}></IdleTimeOut> */}
         {/* <Timeout /> */}
-        <div className={classes.App}>
+        <Aux classes={classes.App}>
           <button onClick={() => {
             this.setState(
               { showCockpit: false }
             );
           }}>Remove Cockpit</button>
-          {this.state.showCockpit ?
-            <Cockpit
-              showPersons={this.state.showPersons}
-              personsLength={this.state.persons.length}
-              clicked={this.togglePersonHandler}
-              title={this.appTitle} /> : null
-          }
-          {persons}
-        </div>
-      </div>
+          <AuthContext.Provider value={{ authenticated: this.state.authenticated, login: this.loginHandler }}>
+            {this.state.showCockpit ?
+              <Cockpit
+                showPersons={this.state.showPersons}
+                personsLength={this.state.persons.length}
+                clicked={this.togglePersonHandler}
+                login={this.loginHandler}
+                title={this.appTitle} /> : null
+            }
+            {persons}
+          </AuthContext.Provider>
+
+        </Aux>
+      </div >
     );
   }
 }
 
 // High order function
-export default app;
+export default withClass(App, classes.App);

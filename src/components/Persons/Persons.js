@@ -1,12 +1,13 @@
 import React from 'react';
 import Person from './Person/Person';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import AuthContext from '../../context/authContext';
 
 class Persons extends React.Component {
   // static getDerivedStateFromProps(props, state) {
   //   console.log('Persons.js GetDerivedStateFromProps');
   //   return state;
-  // }
+  // 
 
   shouldComponentUpdate(nextProps, nextState) {
     console.log('Persons.js shouldComponentUpdate');
@@ -42,15 +43,18 @@ class Persons extends React.Component {
   render() {
     return this.props.persons.map((person, index) => {
       return (
-        <ErrorBoundary key={person.id}>
-          <Person
-            key={person.id}
-            name={person.name}
-            age={person.age}
-            click={this.props.clicked.bind(index)}
-            changed={(event) => this.props.changed(event, person.id)}
-          ></Person>
-        </ErrorBoundary>
+        <AuthContext.Consumer>
+          {(context) => <ErrorBoundary key={person.id}>
+            <Person
+              key={person.id}
+              name={person.name}
+              age={person.age}
+              click={this.props.clicked.bind(index)}
+              changed={(event) => this.props.changed(event, person.id)}
+            // isAuth={this.props.isAuthenticated}
+            ></Person>
+          </ErrorBoundary>}
+        </AuthContext.Consumer>
       );
     });
   }

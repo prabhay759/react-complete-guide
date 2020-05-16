@@ -1,12 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import Classes from './Cockpit.css';
+import AuthContext from '../../context/authContext';
 
 const Cockpit = (props) => {
+  const toggleButtonRef = useRef(null);
+
+  const authContext = useContext(AuthContext);
+
   useEffect(() => {
     console.log('Cockpit.js, UseEffect');
     // Making HTTP Request
     // Component did mount and Component did update combined hooks in functional component.
     // const timer = setTimeout(() => { alert('Fetching the data from the cloud'); }, 1000);
+    toggleButtonRef.current.click();
     return () => {
       // clearTimeout(timer);
       console.log("Cockpit.Js cleanup work in useEffect");
@@ -42,10 +48,10 @@ const Cockpit = (props) => {
     <div className={Classes.Cockpit}>
       <p>{props.title} Something wrong here, my value is not getting rendered</p>
       <p className={assignedClasses.join(" ")}>This is really working!</p>
-      <button className={btnClass}
-        onClick={props.clicked}
-      >
-        Toggle Persons  </button>
+      <button ref={toggleButtonRef} className={btnClass} onClick={props.clicked}>
+        Toggle Persons
+      </button>
+      <button onClick={authContext.login}>LogIn</button>
     </div>
   );
 };
